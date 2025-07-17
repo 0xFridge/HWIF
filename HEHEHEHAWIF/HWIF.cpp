@@ -1,6 +1,22 @@
 ﻿#include "HWIF.h"
 #include <cstdint>
 
+const std::array<std::string, 256> HWIF::ENCODING_LUT = [] {
+    std::array<std::string, 256> lut;
+
+    for (int v = 0; v < 256; v++) {
+        lut[v].reserve(v * ENCODING_PLUS.size() + ENCODING_NEXT.size());
+
+        for (int i = 0; i < v; i++) {
+            lut[v] += ENCODING_PLUS;
+        }
+
+        lut[v] += ENCODING_NEXT;
+    }
+
+    return lut;
+}();
+
 HWIF::HWIF(const std::string &filename, bool create) {
     if (create) {
         _width = 0;
@@ -108,13 +124,5 @@ uint8_t HWIF::_decode(const std::string &encoded) {
 }
 
 std::string HWIF::_encode(uint8_t value) {
-    std::string encoded;
-
-    for (int i = 0; i < value; i++) {
-        encoded += ENCODING_PLUS;
-    }
-
-    encoded += ENCODING_NEXT;
-
-    return encoded;
+    return ENCODING_LUT[value];
 }

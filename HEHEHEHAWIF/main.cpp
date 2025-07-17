@@ -55,6 +55,8 @@ CommandArgs parseArguments(int argc, char *argv[]) {
             if (args.width == 0 || args.height == 0) {
                 throw std::invalid_argument("Width and height must be greater than 0");
             }
+        } else if (args.command == "bench") {
+            // No args
         } else {
             throw std::invalid_argument("Unknown command: " + args.command);
         }
@@ -72,7 +74,8 @@ void showUsage() {
         "  HWIF open <filepath>\n"
         "  HWIF convert-from <input-file> <output-file>\n"
         "  HWIF convert-to <input-file> <output-file>\n"
-        "  HWIF generate <output-file> <width> <height>";
+        "  HWIF generate <output-file> <width> <height>\n"
+        "  HWIF bench";
 
     MessageBoxA(nullptr, usage.c_str(), WINDOW_TITLE.data(), MB_ICONINFORMATION);
 }
@@ -80,6 +83,22 @@ void showUsage() {
 void showError(const std::string &message) {
     std::string fullMessage = "Error: " + message + "\n\n";
     MessageBoxA(nullptr, fullMessage.c_str(), WINDOW_TITLE.data(), MB_ICONERROR);
+}
+
+std::vector<Pixel> generateRandomPixels(uint32_t width, uint32_t height) {
+    std::vector<Pixel> pixels;
+    pixels.resize(width * height);
+
+    for (uint32_t y = 0; y < height; y++) {
+        for (uint32_t x = 0; x < width; x++) {
+            static std::random_device rd;
+            static std::mt19937 gen(rd());
+            static std::uniform_int_distribution<int> dis(0, 255);
+            pixels[y * width + x] = {static_cast<uint8_t>(dis(gen)), static_cast<uint8_t>(dis(gen)), static_cast<uint8_t>(dis(gen))};
+        }
+    }
+
+    return pixels;
 }
 
 int main(int argc, char *argv[]) {
@@ -147,18 +166,36 @@ int main(int argc, char *argv[]) {
 
         } else if (args.command == "generate") {
             // Generates a random HWIF
-            hwif = HWIF({}, args.width, args.height);
-
-            for (uint32_t y = 0; y < args.height; y++) {
-                for (uint32_t x = 0; x < args.width; x++) {
-                    static std::random_device rd;
-                    static std::mt19937 gen(rd());
-                    static std::uniform_int_distribution<int> dis(0, 255);
-                    hwif.setPixel(x, y, {static_cast<uint8_t>(dis(gen)), static_cast<uint8_t>(dis(gen)), static_cast<uint8_t>(dis(gen))});
-                }
-            }
+            hwif = HWIF(generateRandomPixels(args.width, args.height), args.width, args.height);
 
             hwif.save(args.filepathOut);
+        } else if (args.command == "bench") {
+            // 32x32 benchmark
+            auto startBench32 = std::chrono::high_resolution_clock::now();
+            hwif = HWIF(generateRandomPixels(32, 32), 32, 32);
+            auto endBench32 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> diffBench32 = endBench32 - startBench32;
+            std::cout << "32x32 benchmark: " << diffBench32.count() << " seconds." << std::endl;
+
+            hwif.save("bench_32x32.hwif");
+
+            // 128x128 benchmark
+            auto startBench128 = std::chrono::high_resolution_clock::now();
+            hwif = HWIF(generateRandomPixels(128, 128), 128, 128);
+            auto endBench128 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> diffBench128 = endBench128 - startBench128;
+            std::cout << "128x128 benchmark: " << diffBench128.count() << " seconds." << std::endl;
+
+            hwif.save("bench_128x128.hwif");
+
+            // 512x512 benchmark
+            auto startBench512 = std::chrono::high_resolution_clock::now();
+            hwif = HWIF(generateRandomPixels(512, 512), 512, 512);
+            auto endBench512 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> diffBench512 = endBench512 - startBench512;
+            std::cout << "512x512 benchmark: " << diffBench512.count() << " seconds." << std::endl;
+
+            hwif.save("bench_512x512.hwif");
         }
 
     } catch (const std::exception &e) {

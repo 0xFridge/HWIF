@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <array>
 
 struct Pixel {
     uint8_t r;
@@ -20,6 +21,7 @@ class HWIF {
     // ENCODING_PLUS and ENCODING_NEXT MUST be the same size (in bytes)
     static constexpr std::string_view ENCODING_PLUS = "HEHE🐗";
     static constexpr std::string_view ENCODING_NEXT = "HAAW🔨";
+    static const std::array<std::string, 256> ENCODING_LUT; 
 
     std::vector<Pixel> _pixels;
     uint32_t _width;
