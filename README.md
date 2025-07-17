@@ -22,7 +22,7 @@ This is then repeated for each pixel in the image, and is obviously **VERY** ine
 
 ## ⚡ Benchmarks
 
-Note: _The png generation was done in Python, and the hwif generation was done in HWIF (C++)_
+Note: _The png generation was done in Python, and the hwif generation was done in HWIF (C++) (Generation only, not saving it to a file)_
 
 Note 2: _These tests were on my system._
 
