@@ -47,7 +47,6 @@ Note 2: _These tests were on my system._
 | PNG | 787,598 bytes| 0.0399 |
 | HWIF | 808,380,087 bytes | 2.03416  |
 
-
 ## 🚀 Usage
 
 1. Clone the repo
@@ -55,7 +54,7 @@ Note 2: _These tests were on my system._
 3. Build the solution (in `release` mode to make it faster)
 4. Run the executable
 
-### Commands:
+### Commands
 
 ```bash
 hwif open <filepath>
