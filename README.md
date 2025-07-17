@@ -31,21 +31,21 @@ Note 2: _These tests were on my system._
 | Format | Size | Time (s) |
 | --- | --- | --- |
 | PNG | 3,172 bytes| 0.0173 |
-| HWIF | 3,083,583 bytes | 0.0083035  |
+| HWIF | 3,083,583 bytes | 0.0001645  |
 
 ### A random 128x128 image
 
 | Format | Size | Time (s) |
 | --- | --- | --- |
 | PNG | 49,353 bytes| 0.0188 |
-| HWIF | 50,670,679 bytes | 0.141212  |
+| HWIF | 50,670,679 bytes | 0.0001461 |
 
 ### A random 512x512 image
 
 | Format | Size | Time (s) |
 | --- | --- | --- |
 | PNG | 787,598 bytes| 0.0399 |
-| HWIF | 808,380,087 bytes | 2.03416  |
+| HWIF | 808,380,087 bytes | 0.0021639 |
 
 ## 🚀 Usage
 
